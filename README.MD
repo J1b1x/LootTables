@@ -78,60 +78,49 @@ public function spread(float $fillMultiplier, array $inventories, bool $shuffle 
 ## Use example
 ### This is an example of how to use this library for mini-games like SkyWars
 ```php
-$self = Loot::equalsSelf();
-$armor = Loot::equalsArmor();
+class Example{
+    
+    private const FILL_MULTIPLIER = 0.4;
+    private const MULTIPLIER_RANDOMIZER = 0.2;
+  
+    private LootTable $table;
+  
+    public function initialize(): void{
+        $this->table = new LootTable(
+            new Loot(VanillaBlocks::OAK_PLANKS()->asItem(), 70, 20, 50),
+            new Loot(VanillaBlocks::STONE()->asItem(), 70, 20, 50),
+            new Loot(VanillaBlocks::BRICKS()->asItem(), 65, 20, 50),
 
-$lootMap = new LootTableMap("normal", [
-    new LootTable(1, 2, false, [
-        new Loot(VanillaBlocks::OAK_PLANKS()->asItem(), 70, 20, 50),
-        new Loot(VanillaBlocks::STONE()->asItem(), 70, 20, 50),
-        new Loot(VanillaBlocks::BRICKS()->asItem(), 65, 20, 50),
-    ]),
-    new LootTable(0, 1, false, [
-        new Loot(VanillaBlocks::COBWEB()->asItem(), 30, 1, 3),
-        new Loot(VanillaBlocks::HAY_BALE()->asItem(), 30, 1, 9),
-        new Loot(VanillaBlocks::SLIME()->asItem(), 28, 1, 4),
-    ]),
-    new LootTable(1, 3, false, [
-        new Loot(VanillaItems::APPLE(), 55, 1, 3),
-        new Loot(VanillaItems::BREAD(), 55, 1, 4),
-        new Loot(VanillaItems::COOKED_CHICKEN(), 50, 1, 3),
-        new Loot(VanillaItems::GOLDEN_APPLE(), 2, 1, 2),
-    ]),
-    new LootTable(0, 2, false, [
-        new Loot(VanillaItems::EGG(), 40, 1, 16),
-        new Loot(VanillaItems::SNOWBALL(), 40, 1, 16),
-    ]),
-    new LootTable(1, 1, true, [
-        new Loot(VanillaItems::STONE_SWORD(), 27, 1, 1, $self),
-        new Loot(VanillaItems::GOLDEN_SWORD(), 23, 1, 1, $self),
-        new Loot(VanillaItems::IRON_SWORD(), 18, 1, 1, $self),
-        new Loot(VanillaItems::DIAMOND_SWORD(), 13, 1, 1, $self),
-        
-        new Loot(VanillaItems::STONE_AXE(), 27, 1, 1, $self),
-        new Loot(VanillaItems::GOLDEN_AXE(), 23, 1, 1, $self),
-        new Loot(VanillaItems::IRON_AXE(), 18, 1, 1, $self),
-        new Loot(VanillaItems::DIAMOND_AXE(), 13, 1, 1, $self),
-    ]),
-    new LootTable(2, 4, true, [
-        new Loot(VanillaItems::CHAINMAIL_HELMET(), 20, 1, 1, $armor),
-        new Loot(VanillaItems::CHAINMAIL_CHESTPLATE(), 20, 1, 1, $armor),
-        new Loot(VanillaItems::CHAINMAIL_LEGGINGS(), 20, 1, 1, $armor),
-        new Loot(VanillaItems::CHAINMAIL_BOOTS(), 20, 1, 1, $armor),
+            new Loot(VanillaItems::APPLE(), 55, 1, 3),
+            new Loot(VanillaItems::BREAD(), 55, 1, 4),
+            new Loot(VanillaBlocks::CAKE()->asItem(), 30),
+            new Loot(VanillaItems::RAW_FISH(), 55, 1, 3),
+            new Loot(VanillaItems::COOKED_FISH(), 50, 1, 3),
+            new Loot(VanillaItems::RAW_CHICKEN(), 55, 1, 3),
+            new Loot(VanillaItems::COOKED_CHICKEN(), 50, 1, 3),
 
-        new Loot(VanillaItems::GOLDEN_HELMET(), 20, 1, 1, $armor),
-        new Loot(VanillaItems::GOLDEN_CHESTPLATE(), 20, 1, 1, $armor),
-        new Loot(VanillaItems::GOLDEN_LEGGINGS(), 20, 1, 1, $armor),
-        new Loot(VanillaItems::GOLDEN_BOOTS(), 20, 1, 1, $armor),
+            new Loot(VanillaItems::GOLDEN_APPLE(), 2, 1, 2),
 
-        new Loot(VanillaItems::IRON_HELMET(), 8, 1, 1, $armor),
-        new Loot(VanillaItems::IRON_CHESTPLATE(), 8, 1, 1, $armor),
-        new Loot(VanillaItems::IRON_LEGGINGS(), 8, 1, 1, $armor),
-        new Loot(VanillaItems::IRON_BOOTS(), 8, 1, 1, $armor),
-    ]),
-]);
-
-$fillMultiplier = 0.45;
-$refill = true; //will be set to false after it spread the first time
-$lootMap->spread($fillMultiplier, $inventories, $refill);
+            new Loot(VanillaItems::EGG(), 40, 1, 16),
+            new Loot(VanillaItems::SNOWBALL(), 40, 1, 16),
+            
+            new Loot(VanillaItems::STONE_SWORD(), 27, 1, 1, Loot::equalsSelf()), //Only one stone sword per "island".
+            new Loot(VanillaItems::IRON_HELMET(), 20, 1, 1, Loot::equalsArmor()), //Only one helmet per "island".
+        );
+    }
+  
+    /**
+     * Function spread
+     * @param Inventory[] $inventories
+     * @param bool $shuffle
+     * @return void
+     */
+    public function spread(array $inventories, bool $shuffle = true): void{
+        $this->table->spread(
+            self::FILL_MULTIPLIER + random_float(-self::MULTIPLIER_RANDOMOIZER, self::MULTIPLIER_RANDOMOIZER,
+            $inventories,
+            $shuffle
+        ),
+    }
+}
 ```
