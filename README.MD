@@ -51,7 +51,7 @@ public function __construct(
 ){}
 ```
 ### Loot generating
-#### This is actually supposed to be used by the LootTableMap only
+This is actually supposed to be used by the LootTableMap only
 ```php
 //$loots is the array of loots that got generated already
 //$amount is the amount of loots that get generated, use null to make it a random amount between $minLootAmount and $maxLootAmount
